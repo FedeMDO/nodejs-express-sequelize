@@ -62,7 +62,7 @@ Below is a list of the required API's for the application.
 1. **_POST_** `/balances/deposit/:userId` - Deposits money into the balance of a client, a client can't deposit more than 25% his total of jobs to pay. (at the deposit moment)
    **Why pass userId as a param and not use profile_id header?**
    **Is the amount in the body. i.e. - {amount: 500}?**
-   **If the client's debt is 1000, he can only deposit 25% of 1000 which is 250? it doesn't make much sense to me.**
+   **If the client's debt is 1000, he can only deposit 25% of 1000 which is 250?**
    **This way it doesn't make much sense to me. It would make a bit more sense if we accept at least 25% of his debt as the minimum amount of deposit, wouldn't it?**
 
 1. **_GET_** `/admin/best-profession?start=<date>&end=<date>` - Returns the profession that earned the most money (sum of jobs paid) for any contactor that worked in the query time range.
