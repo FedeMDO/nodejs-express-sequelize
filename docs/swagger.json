@@ -1,0 +1,263 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Deel home task API"
+  },
+  "host": "localhost:3001",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "contracts"
+    },
+    {
+      "name": "jobs"
+    },
+    {
+      "name": "balances"
+    },
+    {
+      "name": "admin"
+    }
+  ],
+  "schemes": ["http"],
+  "paths": {
+    "/contracts": {
+      "get": {
+        "tags": ["contracts"],
+        "summary": "returns a list of contracts belonging to a user (client or contractor), the list should only contain non terminated contracts",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "profile_id",
+            "type": "string",
+            "in": "header",
+            "description": "Id of user profile",
+            "required": true,
+            "default": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/contracts/{id}": {
+      "get": {
+        "tags": ["contracts"],
+        "summary": "Return the contract only if it belongs to the profile calling",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of contract to return",
+            "required": true,
+            "type": "number",
+            "default": 1
+          },
+          {
+            "name": "profile_id",
+            "type": "string",
+            "in": "header",
+            "description": "Id of user profile",
+            "required": true,
+            "default": 5
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/jobs/unpaid": {
+      "get": {
+        "tags": ["jobs"],
+        "summary": "Get all unpaid jobs for a user (either a client or contractor), for active contracts only",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "profile_id",
+            "type": "number",
+            "in": "header",
+            "description": "Id of user profile",
+            "required": true,
+            "default": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/jobs/{job_id}/pay": {
+      "post": {
+        "tags": ["jobs"],
+        "summary": "Pay for a job, a client can only pay if his balance >= the amount to pay. The amount should be moved from the client's balance to the contractor balance",
+        "description": "notice that you can pay for a job only once, if you try to do it twice with the same params, it will fail",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "profile_id",
+            "type": "number",
+            "in": "header",
+            "description": "Id of user profile",
+            "required": true,
+            "default": 1
+          },
+          {
+            "name": "job_id",
+            "in": "path",
+            "description": "job id",
+            "required": true,
+            "type": "number",
+            "default": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "internal server error"
+          }
+        }
+      }
+    },
+    "/balances/deposit/{userId}": {
+      "post": {
+        "tags": ["balances"],
+        "summary": "Deposits money into the balance of a client, a client can't deposit more than 25% his total of jobs to pay. (at the deposit moment)",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "user id (owner of profile.balance)",
+            "required": true,
+            "type": "number",
+            "default": 4
+          },
+          {
+            "name": "depositAmount",
+            "in": "body",
+            "description": "amount to deposit in profile's balance",
+            "required": true,
+            "type": "number",
+            "default": {
+              "depositAmount": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/admin/best-clients": {
+      "get": {
+        "tags": ["admin"],
+        "summary": "Returns the profession that earned the most money (sum of jobs paid) for any contactor that worked in the query time range",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "start",
+            "type": "string",
+            "format": "date",
+            "in": "query",
+            "description": "starting date",
+            "required": true,
+            "default": "2021-12-20"
+          },
+          {
+            "name": "end",
+            "type": "string",
+            "format": "date",
+            "in": "query",
+            "description": "ending date",
+            "required": true,
+            "default": "2021-12-31"
+          },
+          {
+            "name": "limit",
+            "type": "number",
+            "in": "query",
+            "description": "ending date"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          },
+          "500": {
+            "description": "internal server error"
+          }
+        }
+      }
+    },
+    "/admin/best-profession": {
+      "get": {
+        "tags": ["admin"],
+        "summary": "returns the clients the paid the most for jobs in the query time period. limit query parameter should be applied, default limit is 2",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "start",
+            "type": "string",
+            "format": "date",
+            "in": "query",
+            "description": "starting date",
+            "required": true,
+            "default": "2021-12-20"
+          },
+          {
+            "name": "end",
+            "type": "string",
+            "format": "date",
+            "in": "query",
+            "description": "ending date",
+            "required": true,
+            "default": "2021-12-31"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful"
+          },
+          "500": {
+            "description": "internal server error"
+          }
+        }
+      }
+    }
+  }
+}
