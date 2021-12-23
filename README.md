@@ -116,4 +116,4 @@ Thank you and good luck! 🙏
 - Use typescript.
 - Write tests sequelize querying
 - Implement request validators as middlewares. Once that is done, testing endpoints would have more sense.
-- Why not a simple frontend to simulate a client app. But the things it's we would need more endpoints that are not required (Get and Post of jobs, contracts, etc).
+- Why not a simple frontend to simulate a client app. But we would need more endpoints that are not required (Get and Post of jobs, contracts, etc).
