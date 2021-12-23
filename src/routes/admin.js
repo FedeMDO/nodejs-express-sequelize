@@ -62,7 +62,7 @@ router.get('/best-profession', async (req, res) => {
 });
 
 /**
- * @returns all unpaid jobs
+ * @returns best N clients
  */
 router.get('/best-clients', async (req, res) => {
   const { Job, Contract, Profile } = req.app.get('models');
